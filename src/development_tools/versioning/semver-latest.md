@@ -7,18 +7,9 @@ Given a list of version &strs, finds the latest [`semver::Version`].
 Also demonstrates `semver` pre-release preferences.
 
 ```rust,edition2018
-# use error_chain::error_chain;
+use semver::{Version, VersionReq, Error as SemVerError};
 
-use semver::{Version, VersionReq};
-#
-# error_chain! {
-#     foreign_links {
-#         SemVer(semver::SemVerError);
-#         SemVerReq(semver::ReqParseError);
-#     }
-# }
-
-fn find_max_matching_version<'a, I>(version_req_str: &str, iterable: I) -> Result<Option<Version>>
+fn find_max_matching_version<'a, I>(version_req_str: &str, iterable: I) -> Result<Option<Version>,SemVerError>
 where
     I: IntoIterator<Item = &'a str>,
 {
@@ -33,7 +24,7 @@ where
     )
 }
 
-fn main() -> Result<()> {
+fn main() -> Result<(), SemVerError>  {
     assert_eq!(
         find_max_matching_version("<= 1.0.0", vec!["0.9.0", "1.0.0", "1.0.1"])?,
         Some(Version::parse("1.0.0")?)
